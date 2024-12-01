@@ -1,0 +1,8 @@
+[package]
+name = "aoc_01"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+timing_macro = { path = "../timing_macro" }
+itertools = "^0.13.0"
