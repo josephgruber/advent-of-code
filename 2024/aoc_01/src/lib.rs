@@ -34,6 +34,7 @@ pub fn calc_similarities(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32
         })
         .collect()
 }
+
 pub mod solutions {
     use timing_macro::measure_time;
 
