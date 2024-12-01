@@ -15,8 +15,8 @@ pub fn calc_distances(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32> {
     // Determines the absolute difference between the left and right integers
     left_numbers
         .iter()
-        .sorted_unstable()
-        .zip(right_numbers.iter().sorted_unstable())
+        .sorted()
+        .zip(right_numbers.iter().sorted())
         .map(|(left, right)| left.abs_diff(*right))
         .collect()
 }
