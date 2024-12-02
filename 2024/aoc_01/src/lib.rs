@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-pub fn split_list(input: &str) -> (Vec<u32>, Vec<u32>) {
+fn split_list(input: &str) -> (Vec<u32>, Vec<u32>) {
     // Converts the string of integers into a list of left integer and right integers
     input
         .lines()
@@ -11,7 +11,7 @@ pub fn split_list(input: &str) -> (Vec<u32>, Vec<u32>) {
         .unzip()
 }
 
-pub fn calc_distances(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32> {
+fn calc_distances(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32> {
     // Determines the absolute difference between the left and right integers
     left_numbers
         .iter()
@@ -21,7 +21,7 @@ pub fn calc_distances(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32> {
         .collect()
 }
 
-pub fn calc_similarities(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32> {
+fn calc_similarities(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32> {
     // Determines the similarities between the left and right integers
     left_numbers
         .iter()
@@ -36,19 +36,60 @@ pub fn calc_similarities(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32
 }
 
 pub mod solutions {
-    use timing_macro::measure_time;
-
-    #[measure_time]
     pub fn part1(input: &str) -> u32 {
         let (left_numbers, right_numbers) = super::split_list(input);
         let distances = super::calc_distances(&left_numbers, &right_numbers);
         distances.iter().sum()
     }
 
-    #[measure_time]
     pub fn part2(input: &str) -> u32 {
         let (left_numbers, right_numbers) = super::split_list(input);
         let similarities = super::calc_similarities(&left_numbers, &right_numbers);
         similarities.iter().sum()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const TEST_STR: &str = "3   4
+4   3
+2   5
+1   3
+3   9
+3   3";
+
+    #[test]
+    fn test_split_list() {
+        let (left, right) = split_list(TEST_STR);
+        assert_eq!(left, vec![3, 4, 2, 1, 3, 3]);
+        assert_eq!(right, vec![4, 3, 5, 3, 9, 3]);
+    }
+
+    #[test]
+    fn test_calc_distances() {
+        let (left_numbers, right_numbers) = split_list(TEST_STR);
+        let distances = calc_distances(&left_numbers, &right_numbers);
+        assert_eq!(distances, vec![2, 1, 0, 1, 2, 5]);
+    }
+
+    #[test]
+    fn test_calc_similarities() {
+        let (left_numbers, right_numbers) = split_list(TEST_STR);
+        let similarities = calc_similarities(&left_numbers, &right_numbers);
+        assert_eq!(similarities, vec![9, 4, 0, 0, 9, 9]);
+    }
+
+    #[test]
+    fn test_part1() {
+        let result = solutions::part1(TEST_STR);
+        assert_eq!(result, 11);
+    }
+
+    #[test]
+    fn test_part2() {
+        let result = solutions::part2(TEST_STR);
+        assert_eq!(result, 31);
     }
 }

@@ -6,3 +6,10 @@ edition = "2021"
 [dependencies]
 timing_macro = { path = "../timing_macro" }
 itertools = "^0.13.0"
+
+[[bench]]
+name = "bench_aoc_01"
+harness = false
+
+[dev-dependencies]
+criterion = "^0.5.1"
