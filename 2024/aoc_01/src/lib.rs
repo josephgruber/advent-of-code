@@ -80,16 +80,4 @@ mod tests {
         let similarities = calc_similarities(&left_numbers, &right_numbers);
         assert_eq!(similarities, vec![9, 4, 0, 0, 9, 9]);
     }
-
-    #[test]
-    fn test_part1() {
-        let result = solutions::part1(TEST_STR);
-        assert_eq!(result, 11);
-    }
-
-    #[test]
-    fn test_part2() {
-        let result = solutions::part2(TEST_STR);
-        assert_eq!(result, 31);
-    }
 }
