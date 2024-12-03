@@ -1,3 +1,4 @@
+use anyhow::Result;
 use itertools::Itertools;
 
 fn split_list(input: &str) -> (Vec<u32>, Vec<u32>) {
@@ -36,16 +37,20 @@ fn calc_similarities(left_numbers: &[u32], right_numbers: &[u32]) -> Vec<u32> {
 }
 
 pub mod solutions {
-    pub fn part1(input: &str) -> u32 {
+    use super::*;
+
+    pub fn part1(input: &str) -> Result<u32> {
         let (left_numbers, right_numbers) = super::split_list(input);
         let distances = super::calc_distances(&left_numbers, &right_numbers);
-        distances.iter().sum()
+
+        Ok(distances.iter().sum())
     }
 
-    pub fn part2(input: &str) -> u32 {
+    pub fn part2(input: &str) -> Result<u32> {
         let (left_numbers, right_numbers) = super::split_list(input);
         let similarities = super::calc_similarities(&left_numbers, &right_numbers);
-        similarities.iter().sum()
+
+        Ok(similarities.iter().sum())
     }
 }
 
