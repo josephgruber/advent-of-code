@@ -6,5 +6,12 @@ if [ $# != 1 ]; then
 fi
 
 name="$(printf "aoc_%02d" "$1")"
+
 cargo new --bin "$name"
+
+touch "$name/src/lib.rs"
 mkdir "$name/input"
+touch "$name/input/input.txt"
+mkdir "$name/benches"
+mkdir "$name/tests"
+touch "$name/tests/tests.rs"

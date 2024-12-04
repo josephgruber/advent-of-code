@@ -9,12 +9,12 @@ const TEST_STR: &str = "3   4
 
 #[test]
 fn test_part1() {
-    let result = solutions::part1(TEST_STR);
+    let result = solutions::part1(TEST_STR).unwrap();
     assert_eq!(result, 11);
 }
 
 #[test]
 fn test_part2() {
-    let result = solutions::part2(TEST_STR);
+    let result = solutions::part2(TEST_STR).unwrap();
     assert_eq!(result, 31);
 }
