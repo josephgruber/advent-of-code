@@ -9,9 +9,114 @@ name="$(printf "aoc_%02d" "$1")"
 
 cargo new --bin "$name"
 
+# Remove the [dependencies] from the Cargo.toml
+sed -i '' -e '$d' -e '$d' "$name/Cargo.toml"
+
+# Set the default Cargo.toml content
+cat >>"$name/Cargo.toml" <<EOF
+[[bench]]
+name = "bench"
+harness = false
+
+[dependencies]
+anyhow = "^1.0.94"
+code-timing-macros = { version = "^0.0.5", features = ["release"] }
+
+[dev-dependencies]
+criterion = "^0.5.1"
+EOF
+
+# Create the default lib.rs file
 touch "$name/src/lib.rs"
+cat >"$name/src/lib.rs" <<EOF
+use anyhow::Result;
+
+pub mod solutions {
+    use super::*;
+
+    pub fn part1(input: &str) -> Result<usize> {
+        Ok(1)
+    }
+
+    pub fn part2(input: &str) -> Result<usize> {
+        Ok(2)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const TEST_STR: &str = "";
+}
+EOF
+
+# Create a directory for the input data and create the initial file
 mkdir "$name/input"
 touch "$name/input/input.txt"
+
+# Create a directory for the benchmarks and create the default content
 mkdir "$name/benches"
+touch "$name/benches/bench.rs"
+cat >"$name/benches/bench.rs" <<EOF
+use $name::solutions;
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
+
+fn criterion_benchmark(c: &mut Criterion) {
+    let input = include_str!("../input/input.txt");
+
+    c.bench_function("solutions::part1", |b| {
+        b.iter(|| solutions::part1(black_box(input)))
+    });
+
+    c.bench_function("solutions::part2", |b| {
+        b.iter(|| solutions::part2(black_box(input)))
+    });
+}
+
+criterion_group!(benches, criterion_benchmark);
+criterion_main!(benches);
+EOF
+
+# Create a directory for the unit tests, and it's default content
 mkdir "$name/tests"
 touch "$name/tests/tests.rs"
+cat >"$name/tests/tests.rs" <<EOF
+use $name::solutions;
+
+const TEST_STR: &str = "";
+
+#[test]
+fn test_part1() {
+    let result = solutions::part1(TEST_STR);
+    assert_eq!(result.unwrap(), 1);
+}
+
+#[test]
+fn test_part2() {
+    let result = solutions::part2(TEST_STR);
+    assert_eq!(result.unwrap(), 2);
+}
+EOF
+
+# Create the default main.rs file
+cat >"$name/src/main.rs" <<EOF
+use anyhow::Result;
+use $name::solutions;
+use code_timing_macros::time_snippet;
+use std::fs;
+
+fn main() -> Result<()> {
+    let input = fs::read_to_string("input/input.txt")?;
+
+    let part1_result = time_snippet!(solutions::part1(&input)?);
+    println!("Part 1 Result: {:.2}", part1_result);
+
+    println!("---");
+
+    let part2_result = time_snippet!(solutions::part2(&input)?);
+    println!("Part 2 Result: {:.2}", part2_result);
+
+    Ok(())
+}
+EOF
