@@ -30,6 +30,7 @@ name = "bench"
 harness = false
 
 [dependencies]
+aoc-common = { path = "../../common/rust" }
 anyhow = "^1.0.94"
 code-timing-macros = { version = "^0.0.5", features = ["release"] }
 
@@ -41,6 +42,7 @@ EOF
 touch "$project_path/src/lib.rs"
 cat >"$project_path/src/lib.rs" <<EOF
 use anyhow::Result;
+use aoc_common::*;
 
 pub mod solutions {
     use super::*;
