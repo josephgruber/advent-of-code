@@ -1,19 +1,30 @@
 #!/usr/bin/env sh
 
-if [ $# != 1 ]; then
-    echo "Usage: $(basename "$0") <day-number>" >&2
+if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+    echo "Usage: $(basename "$0") [year] <day-number>" >&2
     exit 1
 fi
 
-name="$(printf "aoc_%02d" "$1")"
+if [ $# -eq 1 ]; then
+    year="$(date +%Y)"
+    day="$1"
+else
+    year="$1"
+    day="$2"
+fi
+name="$(printf "aoc_%02d" "$day")"
+project_path="$year/$name"
 
-cargo new --bin "$name"
+# Navigate to repository root
+cd "$(dirname "$0")/../.."
+mkdir -p "$year"
+cargo new --bin "$project_path"
 
 # Remove the [dependencies] from the Cargo.toml
-sed -i '' -e '$d' -e '$d' "$name/Cargo.toml"
+sed -i '' -e '$d' -e '$d' "$project_path/Cargo.toml"
 
 # Set the default Cargo.toml content
-cat >>"$name/Cargo.toml" <<EOF
+cat >>"$project_path/Cargo.toml" <<EOF
 [[bench]]
 name = "bench"
 harness = false
@@ -27,8 +38,8 @@ criterion = "^0.5.1"
 EOF
 
 # Create the default lib.rs file
-touch "$name/src/lib.rs"
-cat >"$name/src/lib.rs" <<EOF
+touch "$project_path/src/lib.rs"
+cat >"$project_path/src/lib.rs" <<EOF
 use anyhow::Result;
 
 pub mod solutions {
@@ -52,13 +63,13 @@ mod tests {
 EOF
 
 # Create a directory for the input data and create the initial file
-mkdir "$name/input"
-touch "$name/input/input.txt"
+mkdir "$project_path/input"
+touch "$project_path/input/input.txt"
 
 # Create a directory for the benchmarks and create the default content
-mkdir "$name/benches"
-touch "$name/benches/bench.rs"
-cat >"$name/benches/bench.rs" <<EOF
+mkdir "$project_path/benches"
+touch "$project_path/benches/bench.rs"
+cat >"$project_path/benches/bench.rs" <<EOF
 use $name::solutions;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
@@ -79,9 +90,9 @@ criterion_main!(benches);
 EOF
 
 # Create a directory for the unit tests, and it's default content
-mkdir "$name/tests"
-touch "$name/tests/tests.rs"
-cat >"$name/tests/tests.rs" <<EOF
+mkdir "$project_path/tests"
+touch "$project_path/tests/tests.rs"
+cat >"$project_path/tests/tests.rs" <<EOF
 use $name::solutions;
 
 const TEST_STR: &str = "";
@@ -100,7 +111,7 @@ fn test_part2() {
 EOF
 
 # Create the default main.rs file
-cat >"$name/src/main.rs" <<EOF
+cat >"$project_path/src/main.rs" <<EOF
 use anyhow::Result;
 use $name::solutions;
 use code_timing_macros::time_snippet;
