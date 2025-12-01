@@ -6,7 +6,7 @@ pub mod solutions {
 
     pub fn part1(input: &str) -> Result<usize> {
         let mut position = 50;
-        let mut positions = vec![position];
+        let mut zero_count = 0;
 
         for line in input.lines() {
             let direction = line.chars().next().unwrap();
@@ -17,16 +17,18 @@ pub mod solutions {
                 'L' => position = (position + 100 - (distance % 100)) % 100,
                 _ => {}
             }
-            positions.push(position);
+
+            if position == 0 {
+                zero_count += 1;
+            }
         }
 
-        let count = positions.iter().filter(|&&pos| pos == 0).count();
-        Ok(count)
+        Ok(zero_count)
     }
 
     pub fn part2(input: &str) -> Result<usize> {
         let mut position = 50;
-        let mut zero_count = 0;
+        let mut zero_count: usize = 0;
 
         for line in input.lines() {
             let direction = line.chars().next().unwrap();
@@ -36,13 +38,13 @@ pub mod solutions {
                 'R' => {
                     let first_zero = (100 - position) % 100;
                     if first_zero != 0 && first_zero <= distance {
-                        zero_count += 1 + (distance - first_zero) / 100;
+                        zero_count += (1 + (distance - first_zero) / 100) as usize;
                     }
                     position = (position + distance) % 100;
                 }
                 'L' => {
                     if position != 0 && position <= distance {
-                        zero_count += 1 + (distance - position) / 100;
+                        zero_count += (1 + (distance - position) / 100) as usize;
                     }
                     position = (position + 100 - (distance % 100)) % 100;
                 }
@@ -50,6 +52,6 @@ pub mod solutions {
             }
         }
 
-        Ok(zero_count as usize)
+        Ok(zero_count)
     }
 }
