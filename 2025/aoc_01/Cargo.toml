@@ -1,0 +1,16 @@
+[package]
+name = "aoc_01"
+version = "0.1.0"
+edition = "2021"
+
+[[bench]]
+name = "bench"
+harness = false
+
+[dependencies]
+aoc-common = { path = "../../common/rust" }
+anyhow = "^1.0.94"
+code-timing-macros = { version = "^0.0.5", features = ["release"] }
+
+[dev-dependencies]
+criterion = "^0.5.1"
